@@ -1,0 +1,17 @@
+# Dataset Splitting
+# graph-part==1.0.2
+# mmseqs2==18.8cc5c
+# emboss==6.6.0
+# pandas==2.3.3
+
+# Training and Evaluation
+biopython>=1.78
+matplotlib==3.5.1
+seaborn==0.11.2
+modlamp==4.3.2
+numpy==1.19.5
+pandas==1.3.4
+scikit-learn==1.0.1
+scipy==1.7.1
+tensorflow==2.5.0
+tqdm==4.67.1

@@ -1,0 +1,88 @@
+1.
+echo CecA.pdb > lst
+
+2.
+$ROSETTA/main/source/bin/minimize_with_cst.linuxgccrelease \
+-in:file:l lst \
+-in:file:fullatom \
+-ignore_unrecognized_res \
+-fa_max_dis 9.0 \
+-database $ROSETTA/main/database/ \
+-ddg::harmonic_ca_tether 0.5 \
+-ddg::constraint_weight 1.0 \
+-ddg::out_pdb_prefix min \
+-ddg::sc_min_only false \
+> mincst.log
+
+3.
+$ROSETTA/main/source/src/apps/public/ddg/convert_to_cst_file.sh mincst.log > input.cst
+
+4.
+#CecA.resfile
+NATAA
+start
+1 A NOTAA K
+2 A NOTAA W
+3 A NOTAA K
+4 A NOTAA L
+5 A NOTAA F
+6 A NOTAA K
+7 A NOTAA K
+8 A NOTAA I 
+9 A NOTAA E
+10 A NOTAA K
+11 A NOTAA V
+12 A NOTAA G
+13 A NOTAA Q
+14 A NOTAA N
+15 A NOTAA I
+16 A NOTAA R
+17 A NOTAA D
+18 A NOTAA G
+19 A NOTAA I
+20 A NOTAA I
+21 A NOTAA K
+22 A NOTAA A
+23 A NOTAA G
+24 A NOTAA P
+25 A NOTAA A
+26 A NOTAA V
+27 A NOTAA A
+28 A NOTAA V
+29 A NOTAA V
+30 A NOTAA G
+31 A NOTAA Q
+32 A NOTAA A
+33 A NOTAA T
+34 A NOTAA Q
+35 A NOTAA I
+36 A NOTAA A
+37 A NOTAA K
+
+5.
+#Flags
+-in:file:s min.pdb
+-resfile CecA.resfile 
+-ddg:weight_file soft_rep_design 
+-ddg:minimization_scorefunction ref2015 
+-fa_max_dis 9.0 
+-ddg::iterations 50
+-ddg::dump_pdbs false
+-ignore_unrecognized_res 
+-ddg::local_opt_only false 
+-ddg::min_cst true 
+-constraints::cst_file input.cst
+-ddg::suppress_checkpointing true 
+-in::file::fullatom 
+-ddg::mean false 
+-ddg::min true 
+-ddg::sc_min_only false 
+-ddg::ramp_repulsive true 
+-unmute core.optimization.LineMinimizer 
+-ddg::output_silent true
+
+6.
+$ROSETTA/main/source/bin/ddg_monomer.linuxgccrelease @flags
+
+7.
+awk '$1=="ddG:" && $2!="description" {print $2, $3}' ddg_predictions.out > total.txt
